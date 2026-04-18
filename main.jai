@@ -14,15 +14,15 @@ main :: () {
         print("raw bytes (% total):", n);
         for 0..n-1 print(" %", formatInt(buffer[it], base=16, minimum_digits=2));
         print("\n");
-        evaluated, evaluated_ok := evaluate(buffer.data, n);
-        words, assembled_ok := assemble(evaluated);
-        if !(evaluated_ok || assembled_ok) {
-            print_tokens(evaluated);
+        parsed, parse_ok := parse(buffer.data, n);
+        words, assembled_ok := assemble(parsed);
+        if !(parse_ok || assembled_ok) {
+            print_tokens(parsed);
             print_words(words);
             print("Failed. Oops");
         }
         print("\n");
-        print_tokens(evaluated);
+        print_tokens(parsed);
         print_words(words);
         print("\n");
     }

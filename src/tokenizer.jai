@@ -77,7 +77,7 @@ char_letter_to_token :: (codepoint: *u8, offset: s64) -> Token {
     return t;
 }
 
-evaluate :: (input: *u8, count: s64) -> [..] Token, bool {
+parse :: (input: *u8, count: s64) -> [..] Token, bool {
     cursor := 0;
     tokens : [..] Token;
     while cursor < count {
@@ -198,7 +198,7 @@ print_tokens :: (tokens: [] Token) {
     }
 }
 
-evaluate_string :: (s: string) -> [..] Token, bool {
-    tokens, ok := evaluate(s.data, s.count);
+parse_string :: (s: string) -> [..] Token, bool {
+    tokens, ok := parse(s.data, s.count);
     return tokens, ok;
 }

@@ -21,7 +21,7 @@ failed_tests := 0;
 
 check :: (name: string, input: string, expected: [] Expected, expect_success := true) {
     total_tests += 1;
-    tokens, success := evaluate_string(input);
+    tokens, success := parse_string(input);
     defer array_free(tokens);
 
     failed := false;
@@ -100,7 +100,7 @@ aw_mod  :: (modifier: u32, operand: u32) -> AsmExpected {
 
 check_asm :: (name: string, input: string, expected: [] AsmExpected, expect_success := true) {
     total_tests += 1;
-    tokens, tok_ok := evaluate_string(input);
+    tokens, tok_ok := parse_string(input);
     defer array_free(tokens);
 
     if !tok_ok {

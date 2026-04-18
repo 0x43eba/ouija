@@ -1,4 +1,4 @@
-### Ouijia is a Jai Uiua Implementation
+### Ouija is a Jai Uiua Implementation
 
 Once again I find myself committing absurdities to Github. Today's is part of the _okay, but why_ series. This is an implementation 
 of Uiua, a stack-based essolang, implemented in Jai, a closed-beta programming language. Initially, I intended to write another Lisp

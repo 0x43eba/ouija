@@ -2,8 +2,8 @@
 #import "Compiler";
 
 build :: () {
-    build_one("MAL", "main.jai", "mal");
-    build_one("MAL_TESTS", "tests/tests.jai", "mal_tests");
+    build_one("OUIJA", "main.jai", "ouija");
+    build_one("OUIJA_TESTS", "tests/tests.jai", "ouija_tests");
     set_build_options_dc(.{do_output=false});
 }
 

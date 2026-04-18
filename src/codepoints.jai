@@ -52,3 +52,4 @@ CODEPOINT_ETA             : u32 : 0x03B7; // η
 CODEPOINT_PI              : u32 : 0x03C0; // π
 CODEPOINT_TAU             : u32 : 0x03C4; // τ
 CODEPOINT_INF             : u32 : 0x221E; // ∞
+CODEPOINT_STAR            : u32 : 0x002A // * Using for stack peaking

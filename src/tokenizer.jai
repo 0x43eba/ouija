@@ -23,6 +23,9 @@ TokenKind :: enum {
     OPEN_PAREN;
     CLOSE_PAREN;
     NEWLINE;
+    OPEN_BRACE;
+    CLOSE_BRACE;
+    INTERNAL;
 }
 
 Token :: struct {
@@ -64,6 +67,12 @@ codepoint_to_token :: (codepoint: u32, offset: s64) -> Token, bool {
             t.kind = .CLOSE_PAREN;
         case #char "\n";
             t.kind = .NEWLINE;
+        case #char "[";
+            t.kind = .OPEN_BRACE;
+        case #char "]";
+            t.kind = .CLOSE_BRACE;
+        case CODEPOINT_STAR;
+            t.kind = .INTERNAL;
         case;
             print("Unknown codepoint: %\n", codepoint);
             return t, false;

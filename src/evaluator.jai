@@ -2,6 +2,11 @@ ValueKind :: enum {
     NUMBER;
     ARRAY;
     FUNCTION;
+    INTERNAL;
+}
+
+InternalInstruction :: enum {
+    SHOW_STACK;
 }
 
 Value :: struct {
@@ -10,6 +15,7 @@ Value :: struct {
         number: float64;
         array: [..]float64;
         function: *Word;
+        internal_instruction: InternalInstruction;
     }
     is_error: bool;
     error: string;
@@ -27,6 +33,8 @@ apply_primitive :: (codepoint: u32, a: Value, b: Value) -> Value, bool {
             result.number = a.number * b.number;
         case CODEPOINT_DIV;
             result.number = a.number / b.number;
+        case CODEPOINT_STAR;
+            result.internal_instruction = .SHOW_STACK
         case;
             return result, false;
     }
@@ -60,6 +68,12 @@ evaluate :: (words: *[] Word, stack: *[..] Value) -> Value, bool {
                     return v, false;
                 }
                 result, ok := apply_primitive(word.glyph, a, b);
+                if result.kind == .INTERNAL {
+                    ok3 := dispatch_internal(words, stack);
+                    if !ok {
+                        return v, false;
+                    }
+                }
                 if !ok {
                     result.is_error = true;
                     result.error = "Unknown primitive applied";

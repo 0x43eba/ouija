@@ -4,6 +4,7 @@
 #load "src/evaluator.jai";
 
 main :: () {
+    stack: [..] Value;
     buffer: [1024] u8;
     while true {
         print(">>> ");
@@ -32,8 +33,6 @@ main :: () {
             array_free(words);
             continue;
         }
-
-        stack: [..] Value;
         result, eval_ok := evaluate(*words, *stack);
         array_free(words);
         array_free(stack);

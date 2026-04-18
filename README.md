@@ -1,7 +1,7 @@
 ### Ouija is a Jai Uiua Implementation
 
 Once again I find myself committing absurdities to Github. Today's is part of the _okay, but why_ series. This is an implementation 
-of Uiua, a stack-based essolang, implemented in Jai, a closed-beta programming language. Initially, I intended to write another Lisp
+of Uiua, a stack-based essolang, implemented in Jai, a closed-beta programming language. Initially, I intended to write another Make A Lisp
 however, on mentioning this to a friend:
 
 <p align="center">
@@ -9,3 +9,8 @@ however, on mentioning this to a friend:
 </p>
 
 and of course someone can not be allowed to make comments like this with no concequence.
+
+
+#### Uiua's Structure
+
+The MAL workflow, when ported to Uiua works for the first step -- languages all need tokenizers and parsers. However since Uiua lacks an abstract syntax tree, the entire process basically collapses after this point.

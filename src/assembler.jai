@@ -3,6 +3,7 @@ WordKind :: enum {
     PRIMITIVE;
     MODIFIED;
     FUNCTION;
+    INTERNAL;
 }
 
 Word :: struct {
@@ -34,6 +35,12 @@ assemble :: (tokens: [] Token) -> [..] Word, bool {
                 w.modified.operand.* = operand_words[0];
                 array_add(*words, w);
                 cursor += 2;
+            case .INTERNAL;
+                w: Word;
+                w.kind = .INTERNAL;
+                w.glyph = token.codepoint;
+                array_add(*words, w);
+                cursor += 1;
             case .GLYPH;
                 w: Word;
                 w.kind = .PRIMITIVE;
@@ -69,6 +76,8 @@ print_words :: (words: [] Word) {
                     formatInt(it.modified.operand.glyph, base=16, minimum_digits=4));
             case .FUNCTION;
                 print(" function=[% words]", it.function.count);
+            case .INTERNAL;
+                print(" internal=U+%", formatInt(it.glyph, base=16, minimum_digits=4));
         }
         print("\n");
     }

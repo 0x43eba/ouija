@@ -12,6 +12,7 @@ CODEPOINT_ETA           :: 0x03B7;
 CODEPOINT_PI            :: 0x03C0;
 CODEPOINT_TAU           :: 0x03C4;
 CODEPOINT_INF           :: 0x221E;
+CODEPOINT_STAR          :: 0x002A;
 
 TokenKind :: enum {
     NUMBER;

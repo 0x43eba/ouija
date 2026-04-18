@@ -33,8 +33,6 @@ apply_primitive :: (codepoint: u32, a: Value, b: Value) -> Value, bool {
             result.number = a.number * b.number;
         case CODEPOINT_DIV;
             result.number = a.number / b.number;
-        case CODEPOINT_STAR;
-            result.internal_instruction = .SHOW_STACK
         case;
             return result, false;
     }
@@ -48,7 +46,43 @@ pop :: (stack: *[..] Value) -> Value, bool {
     return v, true;
 }
 
+print_stack :: (stack: [] Value) {
+    print("[% items]\n", stack.count);
+    if stack.count == 0 {
+        print("Stack empty!\n");
+        return;
+    }
+    for stack {
+        print("  %: kind=%", it_index, it.kind);
+        if it.kind == {
+            case .NUMBER;
+                print(" number=%", it.number);
+            case .ARRAY;
+                print(" array=[% items]", it.array.count);
+            case .FUNCTION;
+                print(" function");
+            case .INTERNAL;
+                print(" internal=%", it.internal_instruction);
+        }
+        print("\n");
+    }
+}
+
+dispatch_internal :: (words: *[] Word, stack: *[..] Value, instruction: InternalInstruction) -> bool {
+    if instruction == .SHOW_STACK {
+        print_stack(stack.*);
+        return true;
+    }
+    return false;
+}
+
 evaluate :: (words: *[] Word, stack: *[..] Value) -> Value, bool {
+    if words.count == 0 {
+        v: Value;
+        v.is_error = true;
+        v.error = "No words to evaluate.";
+        return v, false;
+    }
     cursor := words.count - 1;
     while true {
         word := (words.*)[cursor];
@@ -58,6 +92,16 @@ evaluate :: (words: *[] Word, stack: *[..] Value) -> Value, bool {
                 v.kind = .NUMBER;
                 v.number = word.value;
                 array_add(stack, v);
+            case .INTERNAL;
+                if word.glyph == CODEPOINT_STAR {
+                    ok := dispatch_internal(words, stack, .SHOW_STACK);
+                    if !ok {
+                        v: Value;
+                        v.is_error = true;
+                        v.error = "Failed to dispatch internal operation.";
+                        return v, false;
+                    }
+                }
             case .PRIMITIVE;
                 b, ok1 := pop(stack);
                 a, ok2 := pop(stack);
@@ -68,12 +112,6 @@ evaluate :: (words: *[] Word, stack: *[..] Value) -> Value, bool {
                     return v, false;
                 }
                 result, ok := apply_primitive(word.glyph, a, b);
-                if result.kind == .INTERNAL {
-                    ok3 := dispatch_internal(words, stack);
-                    if !ok {
-                        return v, false;
-                    }
-                }
                 if !ok {
                     result.is_error = true;
                     result.error = "Unknown primitive applied";

@@ -4,12 +4,14 @@ WordKind :: enum {
     MODIFIED;
     FUNCTION;
     INTERNAL;
+    ARRAY;
 }
 
 Word :: struct {
     kind: WordKind;
     using Payload: union {
         value: float64;
+        array_value: [..]Word;
         glyph: u32;
         modified: struct {
             modifier: u32;
@@ -35,6 +37,30 @@ assemble :: (tokens: [] Token) -> [..] Word, bool {
                 w.modified.operand.* = operand_words[0];
                 array_add(*words, w);
                 cursor += 2;
+            case .OPEN_BRACE;
+                subiterator := 1;
+                top_word: Word;
+                top_word.kind = .ARRAY;
+                word_collection: [..]Word;
+                while cursor + subiterator < total_tokens {
+                    next := tokens[cursor+subiterator];
+                    if next.kind == .CLOSE_BRACE {
+                        break;
+                    }
+                    if next.kind != .NUMBER {
+                        print("This isn't Python, don't put an unsigned Toyota Yaris into the array and this won't happen.\n");
+                        print("ERR CODE: SKILL_ISSUE");
+                        return words, false;
+                    }
+                    w: Word;
+                    w.kind = .PUSH;
+                    w.value = next.number_value;
+                    array_add(*word_collection, w);
+                    subiterator += 1;
+                }
+                top_word.array_value = word_collection;
+                array_add(*words, top_word);
+                cursor += subiterator + 1;
             case .INTERNAL;
                 w: Word;
                 w.kind = .INTERNAL;
